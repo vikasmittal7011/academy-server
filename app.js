@@ -13,6 +13,7 @@ const app = express();
 import Auth from "./routes/AuthRoute.js";
 import User from "./routes/UserRoute.js";
 import Course from "./routes/CourseRoute.js";
+import Event from "./routes/EventRoute.js";
 import { fileURLToPath } from "url";
 import HttpError from "./models/http-error.js";
 
@@ -60,13 +61,14 @@ config({
 app.use("/api/auth", Auth);
 app.use("/api/user", User);
 app.use("/api/course", Course);
+app.use("/api/event", Event);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(resolve("build", "index.html"));
 // });
 
 app.use((req, res, next) => {
-  next(new HttpError("Not route found", 404));
+  next(new HttpError("Route Not found", 404));
 });
 
 app.use((error, req, res, next) => {
