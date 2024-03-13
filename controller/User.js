@@ -21,7 +21,7 @@ export const updateUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      req.body,
+      { ...req.body, referCode: req.body.firstName.trim() + req.body.lastName.trim() },
       { new: true },
       "-password"
     );
@@ -30,7 +30,7 @@ export const updateUser = async (req, res, next) => {
     }
     res.status(200).json({
       success: true,
-      user: req.body,
+      user
     });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
