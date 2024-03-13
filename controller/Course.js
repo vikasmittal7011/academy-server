@@ -39,6 +39,22 @@ export const getAllCourses = async (req, res, next) => {
   }
 }
 
+export const getCourseById = async (req, res, next) => {
+  const { id } = req.params
+  try {
+
+    const course = await Course.findOne(id);
+
+    if (!course) {
+      return next(new HttpError("Course not found , Plase try again later!!"));
+    }
+
+    res.json({ success, course })
+
+  } catch (err) {
+    return next(new HttpError(err.message, 500));
+  }
+}
 
 export const updateCourse = async (req, res, next) => {
   const { id } = req.useParams;

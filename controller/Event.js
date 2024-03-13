@@ -35,6 +35,22 @@ export const fetchAll = async (req, res, next) => {
   }
 }
 
+export const fetchById = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    let event = await Event.findOne(id);
+
+    if (!event) {
+      return next(new HttpError("Event not found , Plase try again later"));
+    }
+
+    res.json({ success, event })
+
+  } catch (err) {
+    return next(new HttpError(err.message, 500));
+  }
+}
+
 export const updateEvent = async (req, res, next) => {
   const { id } = req.useParams;
   try {
