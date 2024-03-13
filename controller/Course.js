@@ -22,3 +22,19 @@ export const createCourse = async (req, res, next) => {
     return next(new HttpError(err.message, 500));
   }
 }
+
+export const getAllCourses = async (req, res, next) => {
+  try {
+
+    const courses = await Course.find();
+
+    if (!courses) {
+      return next(new HttpError("Courses not found , Plase try again later!!"));
+    }
+
+    res.json({ success, courses })
+
+  } catch (err) {
+    return next(new HttpError(err.message, 500));
+  }
+}
