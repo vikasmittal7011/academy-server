@@ -34,3 +34,39 @@ export const fetchAll = async (req, res, next) => {
     return next(new HttpError(err.message, 500));
   }
 }
+
+export const updateEvent = async (req, res, next) => {
+  const { id } = req.useParams;
+  try {
+    const event = await Event.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true },
+    );
+
+    if (!event) {
+      return next(new HttpError("Event not update , Plase try again later"));
+    }
+
+    res.json({ success, event })
+
+  } catch (err) {
+    return next(new HttpError(err.message, 500));
+  }
+}
+
+export const deleteEvent = async (req, res, next) => {
+  const { id } = req.useParams;
+  try {
+    const event = await Event.findByIdAndDelete(id);
+
+    if (!event) {
+      return next(new HttpError("Event not delete , Plase try again later"));
+    }
+
+    res.json({ success })
+
+  } catch (err) {
+    return next(new HttpError(err.message, 500));
+  }
+}
