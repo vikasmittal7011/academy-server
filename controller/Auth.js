@@ -66,7 +66,7 @@ export const createUser = async (req, res, next) => {
   let user;
   try {
     hash(req.body.password, parseInt(salt)).then(async (pass) => {
-      const createUser = { ...req.body, password: pass };
+      const createUser = { ...req.body, password: pass, referCode: req.body.firstName.trim() + req.body.lastName.trim() };
       user = await User.create(createUser);
       const token = generateTokenAndSetCookie(user.id, user.role, res);
       res.cookie("otp", "");

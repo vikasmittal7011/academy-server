@@ -12,6 +12,7 @@ const app = express();
 
 import Auth from "./routes/AuthRoute.js";
 import User from "./routes/UserRoute.js";
+import Course from "./routes/CourseRoute.js";
 import { fileURLToPath } from "url";
 import HttpError from "./models/http-error.js";
 
@@ -58,6 +59,7 @@ config({
 
 app.use("/api/auth", Auth);
 app.use("/api/user", User);
+app.use("/api/course", Course);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(resolve("build", "index.html"));

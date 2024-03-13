@@ -6,8 +6,9 @@ const UserSehema = Schema(
     lastName: { type: String, required: true, },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    referCode: { type: String, required: true },
     contact: { type: Number, default: "" },
-    role: { type: String, required: true, default: "admin" },
+    role: { type: String, required: true, default: "user" },
     passwordResetToken: { type: String, default: "" },
   },
   { timestamps: true }
