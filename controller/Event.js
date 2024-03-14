@@ -38,7 +38,7 @@ export const fetchAll = async (req, res, next) => {
 export const fetchById = async (req, res, next) => {
   const { id } = req.params
   try {
-    let event = await Event.findOne(id);
+    let event = await Event.findOne({ _id: id });
 
     if (!event) {
       return next(new HttpError("Event not found , Plase try again later"));
@@ -52,7 +52,7 @@ export const fetchById = async (req, res, next) => {
 }
 
 export const updateEvent = async (req, res, next) => {
-  const { id } = req.useParams;
+  const { id } = req.params
   try {
     const event = await Event.findByIdAndUpdate(
       id,
@@ -72,12 +72,12 @@ export const updateEvent = async (req, res, next) => {
 }
 
 export const deleteEvent = async (req, res, next) => {
-  const { id } = req.useParams;
+  const { id } = req.params
   try {
-    const event = await Event.findByIdAndDelete(id);
+    const event = await Event.findByIdAndDelete({ _id: id });
 
     if (!event) {
-      return next(new HttpError("Event not delete , Plase try again later"));
+      return next(new HttpError("COurse not delete , Plase try again later"));
     }
 
     res.json({ success })

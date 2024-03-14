@@ -43,7 +43,7 @@ export const getCourseById = async (req, res, next) => {
   const { id } = req.params
   try {
 
-    const course = await Course.findOne(id);
+    const course = await Course.findOne({ _id: id });
 
     if (!course) {
       return next(new HttpError("Course not found , Plase try again later!!"));
@@ -57,11 +57,20 @@ export const getCourseById = async (req, res, next) => {
 }
 
 export const updateCourse = async (req, res, next) => {
-  const { id } = req.useParams;
+  const { id } = req.params
   try {
+
+    let image = req.body.image
+
+    if (!image.includes("https")) {
+      const cloudinaryResponse = await uploader.upload(image);
+      image = cloudinaryResponse.secure_url;
+    }
+
+
     const course = await Course.findByIdAndUpdate(
-      id,
-      { ...req.body },
+      { _id: id },
+      { ...req.body, image },
       { new: true },
     );
 
@@ -77,7 +86,7 @@ export const updateCourse = async (req, res, next) => {
 }
 
 export const deleteCourse = async (req, res, next) => {
-  const { id } = req.useParams;
+  const { id } = req.params
   try {
     const course = await Course.findByIdAndDelete(id);
 
