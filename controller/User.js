@@ -36,3 +36,27 @@ export const updateUser = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 }
+
+
+export const validateReferCode = async (req, res, next) => {
+  const { id } = req.userData;
+  try {
+
+    const referExist = await User.findOne({ referCode: req.body.referCode });
+
+    if (!referExist) {
+      return next(new HttpError("Invalid refer code", 404));
+    }
+
+    const booker = await User.findOne({ _id: id });
+
+    if (req.body.referCode === booker.referCode) {
+      return next(new HttpError("You can't use your refer code", 401));
+    }
+
+    res.json({ success: true })
+
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+}
