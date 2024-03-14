@@ -1,19 +1,38 @@
 import HttpError from "../models/http-error.js";
 import { EventEnroll } from "../models/EventEnroll.js"
+import crypto from "crypto"
 
 const success = true;
 
 export const createEventEnroll = async (req, res, next) => {
   try {
 
-    const createEventEnroll = { ...req.body };
-    let eventEnroll = await EventEnroll.create(createEventEnroll);
+    const {
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature
+    } = req.body
 
-    if (!eventEnroll) {
-      return next(new HttpError("Event Enroll not add , Plase try again later"));
+    const body = razorpay_order_id + "|" + razorpay_payment_id
+
+    const expectedsignature = crypto.createHmac("sha256", process.env.RAZOR_PAY_SECRET).update(body.toString()).digest("hex")
+
+    const isAuth = expectedsignature === razorpay_signature
+
+    if (isAuth) {
+
+      const createEventEnroll = { ...req.query, user: req.userData.id, dateOfEnroll: new Date() };
+      let eventEnroll = await EventEnroll.create(createEventEnroll);
+
+      if (!eventEnroll) {
+        return res.redirect("http://localhost:3000/failer/" + "Booking can't be done, plase try again lagter!!")
+      }
+
+      return res.redirect("http://localhost:3000/confirm/" + eventEnroll.id)
+
+    } else {
+      return res.redirect("http://localhost:3000/failer/" + "Booking can't be done, plase try again lagter!!")
     }
-
-    res.json({ success, eventEnroll })
 
   } catch (err) {
     return next(new HttpError(err.message, 500));
