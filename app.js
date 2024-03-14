@@ -19,6 +19,7 @@ import EventEnroll from "./routes/EventEnrollRoute.js";
 
 import { fileURLToPath } from "url";
 import HttpError from "./models/http-error.js";
+import { createPayment } from "./utils/paymentIntent.js";
 
 const PORT = process.env.PORT || 8080;
 
@@ -61,12 +62,15 @@ config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
 app.use("/api/auth", Auth);
 app.use("/api/user", User);
 app.use("/api/course", Course);
 app.use("/api/course/enroll", CourseEnroll);
 app.use("/api/event/enroll", EventEnroll);
 app.use("/api/event", Event);
+
+app.post("/api/payment/intent", createPayment)
 
 // app.get("*", (req, res) => {
 //   res.sendFile(resolve("build", "index.html"));
