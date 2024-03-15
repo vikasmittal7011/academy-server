@@ -42,7 +42,7 @@ export const validateReferCode = async (req, res, next) => {
   const { id } = req.userData;
   try {
 
-    const referExist = await User.findOne({ referCode: req.body.referCode });
+    const referExist = await User.findOne({ referCode: req.query.referCode });
 
     if (!referExist) {
       return next(new HttpError("Invalid refer code", 404));
