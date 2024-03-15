@@ -42,7 +42,32 @@ export const createCourseEnroll = async (req, res, next) => {
 export const getAllCoursesEnroll = async (req, res, next) => {
   try {
 
-    const coursesEnrolls = await CourseEnroll.find();
+    const { fetchType } = req.query
+
+    let query = {};
+
+    switch (fetchType) {
+      case "day":
+        query.dateOfEnroll = { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) };
+        break;
+
+      case "week":
+        query.dateOfEnroll = { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) };
+        break;
+
+      case "month":
+        query.dateOfEnroll = { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) };
+        break;
+
+      case "year":
+        query.dateOfEnroll = { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) };
+        break;
+
+      default:
+        break;
+    }
+
+    const coursesEnrolls = await CourseEnroll.find(query).populate("user").populate("courseId");
 
     if (!coursesEnrolls) {
       return next(new HttpError("Courses Enroll not found , Plase try again later!!"));
@@ -51,7 +76,7 @@ export const getAllCoursesEnroll = async (req, res, next) => {
     res.json({ success, coursesEnrolls })
 
   } catch (err) {
-    return next(new HttpError(err.message, 500));
+    return next(new HttpError(err, 401));
   }
 }
 
