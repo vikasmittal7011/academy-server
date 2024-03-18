@@ -21,7 +21,7 @@ export const updateUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { ...req.body, referCode: req.body.firstName.trim() + req.body.lastName.trim() },
+      { ...req.body },
       { new: true },
       "-password"
     );

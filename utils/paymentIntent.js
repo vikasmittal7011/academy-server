@@ -11,7 +11,6 @@ export async function createPayment(req, res) {
         res.json({ data, success: true, key: process.env.RAZOR_PAY_KEY })
 
     } catch (error) {
-        console.log(error)
         return res.json({ message: error.message })
     }
 }
