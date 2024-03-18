@@ -1,25 +1,25 @@
-import express, { json, urlencoded } from "express";
 import cors from "cors";
-import { dirname, resolve } from 'path';
 import dotenv from 'dotenv';
-dotenv.config();
 import { config } from "cloudinary";
+import path, { dirname } from 'path';
 import cookieparser from "cookie-parser";
+import express, { json, urlencoded } from "express";
 
-
-import connection from "./utils/database.js";
-const app = express();
+dotenv.config();
 
 import Auth from "./routes/AuthRoute.js";
 import User from "./routes/UserRoute.js";
-import Course from "./routes/CourseRoute.js";
 import Event from "./routes/EventRoute.js";
-import CourseEnroll from "./routes/CourseEnrollRoute.js";
+import connection from "./utils/database.js";
+import Course from "./routes/CourseRoute.js";
 import EventEnroll from "./routes/EventEnrollRoute.js";
+import CourseEnroll from "./routes/CourseEnrollRoute.js";
 
 import { fileURLToPath } from "url";
 import HttpError from "./models/http-error.js";
 import { createPayment } from "./utils/paymentIntent.js";
+
+const app = express();
 
 const PORT = process.env.PORT || 8080;
 
@@ -45,7 +45,7 @@ app.use(
   })
 );
 app.use(json());
-app.use(express.static(resolve(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "./build")));
 app.use((req, res, next) => {
   // res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -65,16 +65,16 @@ config({
 
 app.use("/api/auth", Auth);
 app.use("/api/user", User);
-app.use("/api/course", Course);
-app.use("/api/course/enroll", CourseEnroll);
-app.use("/api/event/enroll", EventEnroll);
 app.use("/api/event", Event);
+app.use("/api/course", Course);
+app.use("/api/event/enroll", EventEnroll);
+app.use("/api/course/enroll", CourseEnroll);
 
 app.post("/api/payment/intent", createPayment)
 
-// app.get("*", (req, res) => {
-//   res.sendFile(resolve("build", "index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./build/index.html"));
+});
 
 app.use((req, res, next) => {
   next(new HttpError("Route Not found", 404));
